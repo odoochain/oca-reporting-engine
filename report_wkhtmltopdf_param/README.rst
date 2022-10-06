@@ -23,17 +23,22 @@ Report Wkhtmltopdf Param
     :target: https://runbot.odoo-community.org/runbot/143/15.0
     :alt: Try me on Runbot
 
-|badge1| |badge2| |badge3| |badge4| |badge5| 
+|badge1| |badge2| |badge3| |badge4| |badge5|
 
 This module allows you to add new parameters for a paper format which are
 then forwarded to wkhtmltopdf command as arguments. To display the arguments
 that wkhtmltopdf accepts go to your command line and type 'wkhtmltopdf -H'.
+https://wkhtmltopdf.org/usage/wkhtmltopdf.txt
 
 A commonly used parameter in Odoo is *--disable-smart-shrinking*, that will
 disable the automatic resizing of the PDF when converting. This is
 important when you intend to have a layout that conforms to certain alignment.
 It is very common whenever you need to conform the PDF to a predefined
 layoyut (e.g. checks, official forms,...).
+
+此模块允许您为纸张格式添加新参数，然后将其作为参数转发给 wkhtmltopdf 命令。要显示 wkhtmltopdf 接受的参数，请转到命令行并键入“wkhtmltopdf -H”。
+Odoo 中一个常用的参数是 --disable-smart-shrinking，它将在转换时禁用 PDF 的自动调整大小。当您打算拥有符合特定对齐方式的布局时，这一点很重要。
+每当您需要使 PDF 符合预定义的布局（例如支票、正式表格等）时，这很常见。
 
 **Table of contents**
 
