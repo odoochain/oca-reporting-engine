@@ -11,7 +11,9 @@
     "website": "https://github.com/OCA/reporting-engine",
     "depends": ["web"],
     "external_dependencies": {
-        "python": ["py3o.template", "py3o.formats", "PyPDF2"],
+        "python": ["py3o.template", "py3o.formats", "PyPDF2",
+                   # "libmagic", "python-magic-bin", "python-magic",
+                   ],
         "deb": ["libreoffice"],
     },
     "assets": {

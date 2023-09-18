@@ -15,7 +15,7 @@ try:
 except ImportError:
     logger.debug("Cannot import py3o.formats")
 
-PY3O_CONVERSION_COMMAND_PARAMETER = "py3o.conversion_command"
+PY3O_CONVERSION_COMMAND_PARAMETER = "py3o_conversion_command"
 
 
 class IrActionsReport(models.Model):
@@ -104,9 +104,7 @@ class IrActionsReport(models.Model):
     @api.model
     def _get_lo_bin(self):
         lo_bin = (
-            self.env["ir.config_parameter"]
-            .sudo()
-            .get_param(PY3O_CONVERSION_COMMAND_PARAMETER, "libreoffice")
+            self.env["ir.config_parameter"].sudo().get_param(PY3O_CONVERSION_COMMAND_PARAMETER, "libreoffice")
         )
         try:
             lo_bin = find_in_path(lo_bin)
@@ -145,7 +143,7 @@ class IrActionsReport(models.Model):
                         "must install the libreoffice runtime on the server. If "
                         "the runtime is already installed and is not found by "
                         "Odoo, you can provide the full path to the runtime by "
-                        "setting the key 'py3o.conversion_command' into the "
+                        "setting the key 'py3o_conversion_command' into the "
                         "configuration parameters."
                     )
                     % rec.name

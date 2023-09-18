@@ -2,19 +2,20 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl)
 import json
 import mimetypes
-
+# import magic
 from werkzeug import exceptions
 from werkzeug.urls import url_decode
 
 from odoo.http import content_disposition, request, route, serialize_exception
 from odoo.tools import html_escape
 
-from odoo.addons.web.controllers.report import ReportController
+from odoo.addons.web.controllers import report
 
 
-class ReportController(ReportController):
+class ReportController(report.ReportController):
     @route()
     def report_routes(self, reportname, docids=None, converter=None, **data):
+        mymimetype = None
         if converter != "py3o":
             return super().report_routes(
                 reportname=reportname, docids=docids, converter=converter, **data
@@ -47,7 +48,23 @@ class ReportController(ReportController):
         filename = action_py3o_report.gen_report_download_filename(docids, data)
         if not filename.endswith(filetype):
             filename = "{}.{}".format(filename, filetype)
-        content_type = mimetypes.guess_type("x." + filetype)[0]
+        mt2, encoding2 = mimetypes.guess_type("x." + filetype)
+        mt, encoding = mimetypes.guess_type(action_py3o_report.py3o_template_fallback)
+
+        if mt is None:
+            try:
+                import magic
+                # if filename:
+                #     mimetype = magic.from_buffer(buffer, mime=True)
+                # else:
+                #     mymimetype = magic.from_file("x." + filetype, mime=True)
+            except ImportError:
+                magic = None
+                # pass
+            # print("Cannot determine Mime Type")
+            content_type = 'application/vnd.oasis.opendocument.text'
+        else:
+            content_type = mt[0]
         http_headers = [
             ("Content-Type", content_type),
             ("Content-Length", len(res)),
