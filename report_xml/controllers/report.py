@@ -3,8 +3,7 @@
 
 import json
 import logging
-
-from werkzeug.urls import url_parse
+from urllib.parse import parse_qsl, urlparse
 
 from odoo.http import content_disposition, request, route, serialize_exception
 from odoo.tools import html_escape
@@ -72,7 +71,7 @@ class ReportController(report.ReportController):
                     )
                     filename = f"{report_name}.{report.xml_extension}"
             else:
-                data = url_parse(url).decode_query(cls=dict)
+                data = dict(parse_qsl(urlparse(url).query, keep_blank_values=False))
                 if "context" in data:
                     context = json.loads(context or "{}")
                     data_context = json.loads(data.pop("context"))

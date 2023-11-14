@@ -2,8 +2,7 @@
 # Copyright 2020 Ecosoft Co., Ltd.
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).
 import json
-
-from werkzeug.urls import url_decode
+from urllib.parse import parse_qs
 
 from odoo.http import request, route
 
@@ -25,7 +24,7 @@ class ReportControllerEncrypt(ReportController):
             and "?" in url
         ):
             data = dict(
-                url_decode(url.split("?")[1]).items()
+                parse_qs(url.split("?")[1]).items()
             )  # decoding the args represented in JSON
             if "context" in data:
                 context, data_context = json.loads(context or "{}"), json.loads(

@@ -13,13 +13,15 @@ from contextlib import closing
 from io import BytesIO
 from zipfile import ZIP_DEFLATED, ZipFile
 
-import pkg_resources
-
 from odoo import _, api, fields, models, tools
 from odoo.exceptions import AccessError
 from odoo.tools.safe_eval import safe_eval, time
 
 from ._py3o_parser_context import Py3oParserContext
+if sys.version_info >= (3, 9):
+    import importlib.resources as importlib_resources
+else:
+    import importlib_resources
 
 logger = logging.getLogger(__name__)
 
@@ -129,9 +131,10 @@ class Py3oReport(models.TransientModel):
         flbk_filename = None
         if report_xml.module:
             # if the default is defined
-            flbk_filename = pkg_resources.resource_filename(
-                "odoo.addons.%s" % report_xml.module, tmpl_name
-            )
+            # https://importlib-resources.readthedocs.io/en/latest/migration.html
+            flbk_filename = importlib_resources.files(
+                "odoo.addons.%s" % report_xml.module) / tmpl_name
+
         elif self._is_valid_template_path(tmpl_name):
             flbk_filename = os.path.realpath(tmpl_name)
         if self._is_valid_template_filename(flbk_filename):

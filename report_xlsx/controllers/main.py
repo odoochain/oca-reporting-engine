@@ -4,8 +4,7 @@
 
 import json
 import logging
-
-from werkzeug.urls import url_decode
+from urllib.parse import parse_qs
 
 from odoo.http import (
     content_disposition,
@@ -66,7 +65,7 @@ class ReportController(ReportController):
                 else:
                     # Particular report:
                     data = dict(
-                        url_decode(url.split("?")[1]).items()
+                        parse_qs(url.split("?")[1]).items()
                     )  # decoding the args represented in JSON
                     if "context" in data:
                         context, data_context = json.loads(context or "{}"), json.loads(

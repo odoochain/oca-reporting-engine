@@ -2,9 +2,10 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl)
 import json
 import mimetypes
+from urllib.parse import parse_qs
+
 # import magic
 from werkzeug import exceptions
-from werkzeug.urls import url_decode
 
 from odoo.http import content_disposition, request, route, serialize_exception
 from odoo.tools import html_escape
@@ -99,7 +100,7 @@ class ReportController(report.ReportController):
             else:
                 # Particular report:
                 # decoding the args represented in JSON
-                data = list(url_decode(url.split("?")[1]).items())
+                data = list(parse_qs(url.split("?")[1]).items())
                 response = self.report_routes(
                     reportname, converter="py3o", **dict(data)
                 )

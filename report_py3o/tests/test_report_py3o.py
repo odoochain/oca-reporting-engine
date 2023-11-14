@@ -2,6 +2,12 @@
 # License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl).).
 
 import base64
+import sys
+
+if sys.version_info >= (3, 9):
+    import importlib.resources as importlib_resources
+else:
+    import importlib_resources
 import logging
 import os
 import shutil
@@ -10,9 +16,7 @@ from base64 import b64decode, b64encode
 from contextlib import contextmanager
 from unittest import mock
 
-import pkg_resources
-from PyPDF2 import PdfFileWriter
-from PyPDF2.pdf import PageObject
+from PyPDF2 import PdfFileWriter, PageObject
 
 from odoo import tools
 from odoo.exceptions import ValidationError
@@ -146,7 +150,7 @@ class TestReportPy3o(TransactionCase):
         # the demo template is specified with a relative path in in the module
         # path
         tmpl_name = self.report.py3o_template_fallback
-        flbk_filename = pkg_resources.resource_filename(
+        flbk_filename = importlib_resources(
             "odoo.addons.%s" % self.report.module, tmpl_name
         )
         self.assertTrue(os.path.exists(flbk_filename))
@@ -190,9 +194,10 @@ class TestReportPy3o(TransactionCase):
     @tools.misc.mute_logger("odoo.addons.report_py3o.models.py3o_report")
     def test_report_template_fallback_validity(self):
         tmpl_name = self.report.py3o_template_fallback
-        flbk_filename = pkg_resources.resource_filename(
-            "odoo.addons.%s" % self.report.module, tmpl_name
-        )
+        # flbk_filename = resource_filename(
+        #     "odoo.addons.%s" % self.report.module, tmpl_name
+        # )
+        flbk_filename = importlib_resources.files("odoo.addons.%s" % self.report.module) / tmpl_name
         # an exising file in a native format is a valid template if it's
         self.assertTrue(self.py3o_report._get_template_from_path(tmpl_name))
         self.report.module = None
